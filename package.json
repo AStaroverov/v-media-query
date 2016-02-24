@@ -1,0 +1,25 @@
+{
+  "name": "v-media-query",
+  "version": "1.0.0",
+  "description": "directive for vuejs",
+  "main": "/dist/v-media-query.min.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AStaroverov/v-media-query.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AStaroverov/v-media-query/issues"
+  },
+  "homepage": "https://github.com/AStaroverov/v-media-query#readme",
+  "devDependencies": {
+    "babel-core": "^6.5.2",
+    "babel-loader": "^6.2.3",
+    "babel-preset-es2015": "^6.5.0",
+    "webpack": "^1.12.14"
+  }
+}
