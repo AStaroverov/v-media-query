@@ -6,20 +6,24 @@
 </head>
 <body id='app'>
 
-  <vue-test v-mq:above.width="600"></vue-test>
+  <vue-test v-mq:above.resize.width="600" or v-mq:above.height="1600"></vue-test>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.16/vue.js" charset="utf-8"></script>
   <script src="./dist/v-media-query.js"></script>
   <script>
-  debugger
     Vue.directive('mq', vMediaQuery.default)
     new Vue({
       el: '#app',
       components: {
         'vue-test': {
-          template: '<div>ololololo</div>',
+          template: '<div v-show="mediaQuery">ololololo</div>',
+          data() {
+            return {
+              mediaQuery: true,
+            }
+          },
           attached() {
-            console.log(this.$mediaQuery);
+            console.log(this.mediaQuery)
           }
         }
       }

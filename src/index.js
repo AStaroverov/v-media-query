@@ -3,7 +3,6 @@
 export default {
   params: ['or', 'and'],
   bind() {
-    debugger
     let vm = this.el
       ? this.el.__vue__
       : false
@@ -14,57 +13,75 @@ export default {
 
     let method = this.arg
     let measurement = Object.keys(this.modifiers)[0]
-    let resize = Object.keys(this.modifiers)[1]
+    let resize = Object.keys(this.modifiers)[1] === 'resize'
     let value = this.expression
-    let getResult = function() {
-      return [method](value, measurement)
-    }
     let operator = Object.keys(this.params)[0]
-
-    if (operator) {
-      vm.__mediaQuery$operator = operator
+    let expression = function() {
+      return methods[method](value, measurement)
     }
 
-    vm.__mediaQuery$expressions = [].concat(vm.__mediaQueryExpressions || [], getResult)
+    let vmStore = VMs[vm._uid] || (VMs[vm._uid] = {})
 
-    if (!vm.__mediaQuery$getResult) {
-      vm.__mediaQuery$getResult = function() {
-        return vm.__mediaQuery$expressions.reduce((result, expression) => {
-          if (result === undefined) {
-            return expression
-          } else if (vm.__mediaQuery$operator) {
-            return  vm.__mediaQuery$operator === 'or'
-                ? result || vm.mediaQuery
-                : operator === 'and'
-                  ? result && vm.mediaQuery
-                  : result
-          } else {
-            return expression
-          }
-        }, undefined)
-      }
+    operator && (vmStore.operators = operator);
+    vmStore.expressions = [].concat(vmStore.expressions || [], {
+      expression,
+      resize
+    })
 
-      vm.on('hook:init', function() {
-        debugger
-        vm.$set('$mediaQuery', vm.__mediaQuery$getResult())
+    if (vmStore && vmStore.expressions) {
+      vm.$on('hook:compiled', function() {
+        vm.$set('mediaQuery', getMediaQuery(vm))
       })
-      document.addEventListener('resize', function() {
-        debugger
-        vm.$set('$mediaQuery', vm.__mediaQuery$getResult())
+
+      window.addEventListener('resize', function() {
+        vm.$set('mediaQuery', getMediaQuery(vm, true))
       })
     }
-
-    // if (vm.mediaQuery !== undefined) {
-    //   result = operator === 'or'
-    //     ? vm.mediaQuery || result
-    //     : operator === 'and'
-    //       ? vm.mediaQuery && result
-    //       : result
-    // }
-    //
-    // vm.__mediaQueryLastOperator =
-    // vm.$set('mediaQuery', result)
   },
+}
+
+let VMs = {};
+
+let getMediaQuery = function(vm, itResize) {
+  let vmStore = VMs[vm._uid];
+
+  if (!vmStore || !vmStore.expressions) return
+
+  let operator = '';
+
+  let mediaQuery = vmStore.expressions.reduce((result, {expression, resize}) => {
+    console.log('resize', resize);
+    let expr;
+
+    if (itResize && !resize) {
+      expr = result !== undefined
+        ? result
+        : undefined
+    } else if (result === undefined) {
+      expr = expression()
+    } else if (operator) {
+      expr = operator === 'or'
+        ? (result || expression())
+        : operator === 'and'
+          ? (result && expression())
+          : result
+
+      operator = '';
+    } else {
+      expr = expression()
+    }
+
+    operator = vmStore.operators
+
+    console.log('expr', expr);
+    return expr;
+  }, undefined)
+
+  console.log('mediaQuery', mediaQuery);
+
+  return mediaQuery !== undefined
+    ? mediaQuery
+    : vm.mediaQuery
 }
 
 // METHODS
@@ -102,3 +119,5 @@ let beyond = function(minAndMax, measurement = 'width') {
     (min-${measurement}: ${prepare(maxVal)})
   `).matches
 }
+
+let methods = {below, above, between, beyond};
