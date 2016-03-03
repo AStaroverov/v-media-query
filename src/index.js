@@ -4,23 +4,30 @@ let vue
 let vms = {}
 let mqData = {
   created() {
-    vue.util.defineReactive(this.$mq, 'resize', 1)
-    vms[this._uid] = this;
+    let root = this.$parent;
+
+    if (root) {
+      vue.util.defineReactive(this.$mq, 'resize', root.$mq.resize)
+    } else {
+      vue.util.defineReactive(this.$mq, 'resize', 1)
+      vms[this._uid] = this;
+    }
   },
 }
 
 export default {
-  mixin: mqData,
   install: function (Vue, options) {
     vue = Vue
     Vue.options = Vue.util.mergeOptions(Vue.options, mqData)
 
-    Vue.prototype.$mq = {}
-    Vue.prototype.$mq.resize
-    Vue.prototype.$above = above
-    Vue.prototype.$mq.below = below
-    Vue.prototype.$mq.between = between
-    Vue.prototype.$mq.beyond = beyond
+    Vue.prototype.$mq = {
+      resize: 1,
+      expr: expr,
+      below: below,
+      above: above,
+      beyond: beyond,
+      between: between,
+    }
     initResize();
   }
 }
@@ -28,11 +35,14 @@ export default {
 
 let initResize = function() {
   let debounseResize = vue.util.debounce(() => {
-    let val = vue.prototype.$mq.resize + 1;
-    Object.keys(vms).forEach(key => vms[key].$mq.resize = val);
+    Object.keys(vms).forEach(key => ++vms[key].$mq.resize);
   } , 150)
 
   window.addEventListener('resize', debounseResize)
+}
+
+let getArgs = function(args) {
+  return args.length > 0 ? args.reverse() : args
 }
 
 let prepare = function(val) {
@@ -41,17 +51,23 @@ let prepare = function(val) {
     : val
 }
 
-let below = function(value, measurement = 'width') {
+let expr = function(expressionString) {
+  return matchMedia(expressionString).matches
+}
+
+let below = function(...args) {
+  let [value, measurement = 'width'] = getArgs(args)
   return matchMedia(`(max-${measurement}: ${prepare(value)})`).matches
 }
 
-let above = function(value, measurement = 'width') {
-  console.log(arguments, this)
+let above = function(...args) {
+  let [value, measurement = 'width'] = getArgs(args)
   return matchMedia(`(min-${measurement}: ${prepare(value)})`).matches
 }
 
-let between = function(minAndMax, measurement = 'width') {
-  let [minVal, maxVal] = JSON.parse(minAndMax)
+let between = function(...args) {
+  let [value, measurement = 'width'] = getArgs(args)
+  let [minVal, maxVal] = value
 
   return matchMedia(`(
     min-${measurement}: ${prepare(minVal)})
@@ -60,8 +76,9 @@ let between = function(minAndMax, measurement = 'width') {
   )`).matches
 }
 
-let beyond = function(minAndMax, measurement = 'width') {
-  let [minVal, maxVal] = JSON.parse(minAndMax)
+let beyond = function(...args) {
+  let [value, measurement = 'width'] = getArgs(args)
+  let [minVal, maxVal] = value
 
   return matchMedia(`
     (max-${measurement}: ${prepare(minVal)})

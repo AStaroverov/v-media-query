@@ -6,8 +6,7 @@
 </head>
 <body id='app'>
   {{ $mq.resize  }}
-  <!-- <vue-test v-mq:above.resize.width="600" or v-mq:above.height="1600"></vue-test> -->
-  <vue-test v-show="$mq.resize && $mq.above(600)"></vue-test>
+  <vue-test v-show="$mq.resize && $mq.expr('(min-device-width: 100px)')"></vue-test>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.16/vue.js" charset="utf-8"></script>
   <script src="./dist/v-media-query.js"></script>
@@ -18,7 +17,7 @@
       el: '#app',
       components: {
         'vue-test': {
-          template: '<div>ololololo</div>',
+          template: '<div> {{ $mq.resize  }} ololololo</div>',
         }
       }
     })
