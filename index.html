@@ -5,26 +5,20 @@
   <title>Vue media query directive</title>
 </head>
 <body id='app'>
-
-  <vue-test v-mq:above.resize.width="600" or v-mq:above.height="1600"></vue-test>
+  {{ $mq.resize  }}
+  <!-- <vue-test v-mq:above.resize.width="600" or v-mq:above.height="1600"></vue-test> -->
+  <vue-test v-show="$mq.resize && $mq.above(600)"></vue-test>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.16/vue.js" charset="utf-8"></script>
   <script src="./dist/v-media-query.js"></script>
   <script>
-    Vue.directive('mq', vMediaQuery.default)
+    Vue.use(vMediaQuery.default);
+    // Vue.directive('mq', vMediaQuery.directive)
     new Vue({
       el: '#app',
       components: {
         'vue-test': {
-          template: '<div v-show="mediaQuery">ololololo</div>',
-          data() {
-            return {
-              mediaQuery: true,
-            }
-          },
-          attached() {
-            console.log(this.mediaQuery)
-          }
+          template: '<div>ololololo</div>',
         }
       }
     })

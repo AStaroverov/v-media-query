@@ -1,90 +1,39 @@
 // div v-mq:above.width.resize="100"
 
-export default {
-  params: ['or', 'and'],
-  bind() {
-    let vm = this.el
-      ? this.el.__vue__
-      : false
-
-    if (!vm) {
-      return
-    }
-
-    let method = this.arg
-    let measurement = Object.keys(this.modifiers)[0]
-    let resize = Object.keys(this.modifiers)[1] === 'resize'
-    let value = this.expression
-    let operator = Object.keys(this.params)[0]
-    let expression = function() {
-      return methods[method](value, measurement)
-    }
-
-    let vmStore = VMs[vm._uid] || (VMs[vm._uid] = {})
-
-    operator && (vmStore.operators = operator);
-    vmStore.expressions = [].concat(vmStore.expressions || [], {
-      expression,
-      resize
-    })
-
-    if (vmStore && vmStore.expressions) {
-      vm.$on('hook:compiled', function() {
-        vm.$set('mediaQuery', getMediaQuery(vm))
-      })
-
-      window.addEventListener('resize', function() {
-        vm.$set('mediaQuery', getMediaQuery(vm, true))
-      })
-    }
+let vue
+let vms = {}
+let mqData = {
+  created() {
+    vue.util.defineReactive(this.$mq, 'resize', 1)
+    vms[this._uid] = this;
   },
 }
 
-let VMs = {};
+export default {
+  mixin: mqData,
+  install: function (Vue, options) {
+    vue = Vue
+    Vue.options = Vue.util.mergeOptions(Vue.options, mqData)
 
-let getMediaQuery = function(vm, itResize) {
-  let vmStore = VMs[vm._uid];
-
-  if (!vmStore || !vmStore.expressions) return
-
-  let operator = '';
-
-  let mediaQuery = vmStore.expressions.reduce((result, {expression, resize}) => {
-    console.log('resize', resize);
-    let expr;
-
-    if (itResize && !resize) {
-      expr = result !== undefined
-        ? result
-        : undefined
-    } else if (result === undefined) {
-      expr = expression()
-    } else if (operator) {
-      expr = operator === 'or'
-        ? (result || expression())
-        : operator === 'and'
-          ? (result && expression())
-          : result
-
-      operator = '';
-    } else {
-      expr = expression()
-    }
-
-    operator = vmStore.operators
-
-    console.log('expr', expr);
-    return expr;
-  }, undefined)
-
-  console.log('mediaQuery', mediaQuery);
-
-  return mediaQuery !== undefined
-    ? mediaQuery
-    : vm.mediaQuery
+    Vue.prototype.$mq = {}
+    Vue.prototype.$mq.resize
+    Vue.prototype.$above = above
+    Vue.prototype.$mq.below = below
+    Vue.prototype.$mq.between = between
+    Vue.prototype.$mq.beyond = beyond
+    initResize();
+  }
 }
-
 // METHODS
+
+let initResize = function() {
+  let debounseResize = vue.util.debounce(() => {
+    let val = vue.prototype.$mq.resize + 1;
+    Object.keys(vms).forEach(key => vms[key].$mq.resize = val);
+  } , 150)
+
+  window.addEventListener('resize', debounseResize)
+}
 
 let prepare = function(val) {
   return ('' + parseInt(val)).length === ('' + val).length
@@ -97,6 +46,7 @@ let below = function(value, measurement = 'width') {
 }
 
 let above = function(value, measurement = 'width') {
+  console.log(arguments, this)
   return matchMedia(`(min-${measurement}: ${prepare(value)})`).matches
 }
 
