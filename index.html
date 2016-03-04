@@ -5,19 +5,36 @@
   <title>Vue media query directive</title>
 </head>
 <body id='app'>
-  {{ $mq.resize  }}
-  <vue-test v-show="$mq.resize && $mq.expr('(min-device-width: 100px)')"></vue-test>
+  {{ $mq.resize }}
+  <vue-test v-show="$mq.resize && $mq.above(600)"></vue-test>
+  <vue-test v-show="$mq.resize && $mq.itHD()"></vue-test>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.16/vue.js" charset="utf-8"></script>
   <script src="./dist/v-media-query.js"></script>
   <script>
-    Vue.use(vMediaQuery.default);
-    // Vue.directive('mq', vMediaQuery.directive)
+    Vue.use(vMediaQuery.default, {
+      // nameSpace: {
+      //   methods: '$mq',
+      //   variables: '$mv',
+      // },
+      methods: {
+        notHD() {
+          return window.innerWidth !== 1920
+        },
+        itHD() {
+          return window.innerWidth === 1920
+        },
+      },
+      variables: {
+        screenXs: 600,
+        screenHd: 1920
+      }
+    });
     new Vue({
       el: '#app',
       components: {
         'vue-test': {
-          template: '<div> {{ $mq.resize  }} ololololo</div>',
+          template: '<div> {{ $mq.resize }} text</div>',
         }
       }
     })

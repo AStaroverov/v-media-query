@@ -1,71 +1,75 @@
-// div v-mq:above.width.resize="100"
-
 let vue
-let vms = {}
-let mqData = {
+let _vms = {}
+let _nameSpace = {
+  methods: '$mq',
+  variables: '$mv'
+}
+let _methods = {expr, below, above, beyond, between}
+let _mqData = {
   created() {
-    let root = this.$parent;
+    let root = this.$parent
+    let value = 1
 
     if (root) {
-      vue.util.defineReactive(this.$mq, 'resize', root.$mq.resize)
+      value = root[_nameSpace.methods].resize
     } else {
-      vue.util.defineReactive(this.$mq, 'resize', 1)
-      vms[this._uid] = this;
+      _vms[this._uid] = this;
     }
+
+    vue.util.defineReactive(this[_nameSpace.methods], 'resize', value)
   },
 }
 
 export default {
-  install: function (Vue, options) {
+  methods: _methods,
+  install(Vue, {
+    methods = {},
+    variables = {},
+    nameSpace = {},
+  } = {}) {
     vue = Vue
-    Vue.options = Vue.util.mergeOptions(Vue.options, mqData)
+    Object.assign(_nameSpace, nameSpace)
 
-    Vue.prototype.$mq = {
-      resize: 1,
-      expr: expr,
-      below: below,
-      above: above,
-      beyond: beyond,
-      between: between,
-    }
+    Vue.options = Vue.util.mergeOptions(Vue.options, _mqData)
+    Vue.prototype[_nameSpace.methods]   = Object.assign({}, _methods, methods)
+    Vue.prototype[_nameSpace.variables] = variables
     initResize();
   }
 }
-// METHODS
 
-let initResize = function() {
+function initResize() {
   let debounseResize = vue.util.debounce(() => {
-    Object.keys(vms).forEach(key => ++vms[key].$mq.resize);
+    Object.keys(_vms).forEach(key => ++_vms[key][_nameSpace.methods].resize)
   } , 150)
 
   window.addEventListener('resize', debounseResize)
 }
 
-let getArgs = function(args) {
+function getArgs(args) {
   return args.length > 0 ? args.reverse() : args
 }
 
-let prepare = function(val) {
+function prepare(val) {
   return ('' + parseInt(val)).length === ('' + val).length
     ? `${val}px`
     : val
 }
 
-let expr = function(expressionString) {
+function expr(expressionString) {
   return matchMedia(expressionString).matches
 }
 
-let below = function(...args) {
+function below(...args) {
   let [value, measurement = 'width'] = getArgs(args)
   return matchMedia(`(max-${measurement}: ${prepare(value)})`).matches
 }
 
-let above = function(...args) {
+function above(...args) {
   let [value, measurement = 'width'] = getArgs(args)
   return matchMedia(`(min-${measurement}: ${prepare(value)})`).matches
 }
 
-let between = function(...args) {
+function between(...args) {
   let [value, measurement = 'width'] = getArgs(args)
   let [minVal, maxVal] = value
 
@@ -76,7 +80,7 @@ let between = function(...args) {
   )`).matches
 }
 
-let beyond = function(...args) {
+function beyond(...args) {
   let [value, measurement = 'width'] = getArgs(args)
   let [minVal, maxVal] = value
 
@@ -86,5 +90,3 @@ let beyond = function(...args) {
     (min-${measurement}: ${prepare(maxVal)})
   `).matches
 }
-
-let methods = {below, above, between, beyond};
