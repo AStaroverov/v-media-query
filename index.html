@@ -7,6 +7,7 @@
 <body id='app'>
   {{ $mm.resize }}
   <vue-test v-show="$mm.resize && $mm.notHD()">notHD</vue-test>
+  <vue-test v-show="$mm.resize && $mm.expr('(min-width: 600px)')">expr</vue-test>
   <vue-test v-show="$mm.resize && $mm.between([$vv.screenXs, 1920])">between</vue-test>
   <vue-test v-show="$mm.resize && $mm.beyond([$vv.screenXs, 1000])">beyond</vue-test>
   <vue-test v-show="$mm.above($vv.screenXs)">above</vue-test>
