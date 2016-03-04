@@ -8,15 +8,13 @@ let _methods = {expr, below, above, beyond, between}
 let _mqData = {
   created() {
     let root = this.$parent
-    let value = 1
 
     if (root) {
-      value = root[_nameSpace.methods].resize
+      this.$set('$mq.resize', root[_nameSpace.methods].resize)
     } else {
-      _vms[this._uid] = this;
+      _vms[this._uid] = this
+      vue.util.defineReactive(this[_nameSpace.methods], 'resize', 1)
     }
-
-    vue.util.defineReactive(this[_nameSpace.methods], 'resize', value)
   },
 }
 
@@ -31,7 +29,7 @@ export default {
     Object.assign(_nameSpace, nameSpace)
 
     Vue.options = Vue.util.mergeOptions(Vue.options, _mqData)
-    Vue.prototype[_nameSpace.methods]   = Object.assign({}, _methods, methods)
+    Vue.prototype[_nameSpace.methods] = Object.assign({}, _methods, methods)
     Vue.prototype[_nameSpace.variables] = variables
     initResize();
   }
@@ -73,11 +71,10 @@ function between(...args) {
   let [value, measurement = 'width'] = getArgs(args)
   let [minVal, maxVal] = value
 
-  return matchMedia(`(
-    min-${measurement}: ${prepare(minVal)})
-    and
-    (max-${measurement}: ${prepare(maxVal)}
-  )`).matches
+  return matchMedia(`
+    (min-${measurement}: ${prepare(minVal)}) and
+    (max-${measurement}: ${prepare(maxVal)})
+  `).matches
 }
 
 function beyond(...args) {
@@ -85,8 +82,7 @@ function beyond(...args) {
   let [minVal, maxVal] = value
 
   return matchMedia(`
+    (min-${measurement}: ${prepare(maxVal)}),
     (max-${measurement}: ${prepare(minVal)})
-    or
-    (min-${measurement}: ${prepare(maxVal)})
   `).matches
 }

@@ -5,18 +5,21 @@
   <title>Vue media query directive</title>
 </head>
 <body id='app'>
-  {{ $mq.resize }}
-  <vue-test v-show="$mq.resize && $mq.above(600)"></vue-test>
-  <vue-test v-show="$mq.resize && $mq.itHD()"></vue-test>
+  {{ $mm.resize }}
+  <vue-test v-show="$mm.resize && $mm.notHD()">notHD</vue-test>
+  <vue-test v-show="$mm.resize && $mm.between([$vv.screenXs, 1920])">between</vue-test>
+  <vue-test v-show="$mm.resize && $mm.beyond([$vv.screenXs, 1000])">beyond</vue-test>
+  <vue-test v-show="$mm.above($vv.screenXs)">above</vue-test>
+  <vue-test v-show="$mm.resize && $mm.below(1200)">below</vue-test>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.16/vue.js" charset="utf-8"></script>
-  <script src="./dist/v-media-query.js"></script>
+  <script src="./dist/v-media-query.min.js"></script>
   <script>
     Vue.use(vMediaQuery.default, {
-      // nameSpace: {
-      //   methods: '$mq',
-      //   variables: '$mv',
-      // },
+      nameSpace: {
+        methods: '$mm',
+        variables: '$vv',
+      },
       methods: {
         notHD() {
           return window.innerWidth !== 1920
@@ -34,7 +37,7 @@
       el: '#app',
       components: {
         'vue-test': {
-          template: '<div> {{ $mq.resize }} text</div>',
+          template: '<div><slot></slot> {{ $mm.resize }} text</div>',
         }
       }
     })

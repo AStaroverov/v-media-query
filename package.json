@@ -1,16 +1,24 @@
 {
   "name": "v-media-query",
   "version": "1.0.0",
-  "description": "directive for vuejs",
+  "description": "media query methods for vuejs",
   "main": "/dist/v-media-query.min.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "webpack --config webpack.config.js",
+    "build_min": "NODE_ENV=production webpack --config webpack.config.js",
+    "serverv": "webpack-dev-server --hot --inline"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AStaroverov/v-media-query.git"
   },
-  "author": "",
+  "keywords": [
+    "vuejs",
+    "vue",
+    "vue-component",
+    "component"
+  ],
+  "author": "AStaroverov",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/AStaroverov/v-media-query/issues"
