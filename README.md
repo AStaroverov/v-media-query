@@ -1,4 +1,4 @@
-# vue media query methods
+# vue media query methods ([ru](https://github.com/AStaroverov/v-media-query/blob/master/README_RU.md))
 Plugin for vue, adds methods for work with media query
 
 ## General example:
