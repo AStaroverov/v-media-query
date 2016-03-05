@@ -2,19 +2,18 @@
 Плагин добавляет в области видемости vue методы для работы с media query
 
 ## Вводный пример:
-```
+```javascript
 import vMediaQuery from 'v-media-query'
 
-Vue.use(vvMediaQuery.default)
+Vue.use(vMediaQuery.default)
 ```
 
-```
+```html
 <some-component v-if="$mq.resize && $mq.above('600px')"></some-component>
 ```
-v-if получит результат true для всех окон с ``width > 600px``
-и обновляется при ресайзе окна.
+v-if получит результат true для всех окон с ``width > 600px`` и обновляется при ресайзе окна.
 
-```
+```javascript
 new Vue({
   created() {
     if (this.$mq.above(600)) {
@@ -55,35 +54,35 @@ new Vue({
 
 ---
 
-``$mq.above(measurement, value)``
-``$mq.below(measurement, value)``
-``$mq.between(measurement, [valMin, valMax])``
-``$mq.beyond(measurement, [valMin, valMAx])``
+``$mq.above(measurement, value)`` <br/>
+``$mq.below(measurement, value)`` <br/>
+``$mq.between(measurement, [valMin, valMax])`` <br/>
+``$mq.beyond(measurement, [valMin, valMAx])`` <br/>
 
   * ``measurement``
     * Может принимать зачения: ``'width'``, ``'height'``
-    * Стандартное значение = ``'width'``
+    * Стандартное значение = ``'width'`` <br/>
       example: ``$mq.above(600) == $mq.above('width', 600)``
   * ``value, valMin, valMax``
     * Может принимать значени типа ``Number`` и ``String``
-    * Все значения типа ``Number`` будут переведенны в ``Number + 'px'``
+    * Все значения типа ``Number`` будут переведенны в ``Number + 'px'`` <br/>
       example: ``$mq.above(600) == $mq.above('600px')``
 
 ---
 
 ``$mq.expr(expression)``
-  * expression - любое валидное css media выражение
+  * expression - любое валидное css media выражение <br/>
     example: $mq.expr('screen and (max-device-width: 300px)')
 
 ## Свои методы
 К стандартным методам можно добавить свои методы
 
 ### Пример
-```
-Vue.use(vvMediaQuery.default, {
+```javascript
+Vue.use(vMediaQuery.default, {
   methods: {
     onlyForRetina() {
-      return matchMedia('retina expression').matches
+      return matchMedia('(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)').matches
     }
     fackAbove(...args) {
       return vMediaQuery.methods.above(...args)
@@ -91,34 +90,34 @@ Vue.use(vvMediaQuery.default, {
   }
 })
 ```
-```
+```html
 <some-component v-if="$mq.onlyForRetina()"></some-component>
 <some-component v-show="$mq.resize && $mq.fackAbove(800)"></some-component>
 ```
 
 ## Переменные
-Плагин позволяет добавить в область видемости vue так же переменные
+Плагин позволяет добавить в область видемости vue так же переменные <br/>
 Все переменные доступны в объекте ``$mv`` (media variables)
 
 ### Пример
-```
-Vue.use(vvMediaQuery.default, {
+```javascript
+Vue.use(vMediaQuery.default, {
   variables: {
     hd: 1920,
     sm: '1240px'
   }
 })
 ```
-```
+```html
 <some-component v-show="$mq.resize && $mq.between([$mv.sm, $mv.hd])"></some-component>
 ```
 
 ## Наименование $mq и $mv
 Если вам по каким-то причинам не нравятся обозначения ``$mq``, ``$mv``, вы можете задать их самостаятельно
-(Исполльзуйте в начале имени $ || $$ || _ || __ так вы сможете избежать неожиданных конфликтов)
+<br/> (Исполльзуйте в начале имени $ || $$ || _ || __ так вы сможете избежать неожиданных конфликтов)
 
 ### Пример
-```
+```javascript
 Vue.use(vvMediaQuery.default, {
   nameSpace: {
     methods: $$myMethods, // default $mq
@@ -129,6 +128,6 @@ Vue.use(vvMediaQuery.default, {
   }
 })
 ```
-```
+```html
 <some-component v-show="$$myMethods.resize && $$myMethods.above(__myVariables.hd)"></some-component>
 ```
