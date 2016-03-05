@@ -1,5 +1,5 @@
 # vue media query methods
-Плагин добавляет в области видемости vue методы для работы с media query
+Плагин добавляет во vue методы для работы с media query
 
 ## Вводный пример:
 ```javascript
@@ -11,7 +11,7 @@ Vue.use(vMediaQuery.default)
 ```html
 <some-component v-if="$mq.resize && $mq.above('600px')"></some-component>
 ```
-v-if получит результат true для всех окон с ``width > 600px`` и обновляется при ресайзе окна.
+v-if получает результат true для окна с ``width > 600px`` и обновляется при изменении его размеров.
 
 ```javascript
 new Vue({
@@ -50,7 +50,7 @@ and [here](https://github.com/AStaroverov/v-media-query/blob/master/index.html)
 Все методы доступны в объекте ``$mq`` (media query)
 
 ``$mq.resize``
-  * переменная являющаяся триггером для пересчета media выражения
+  * переменная является триггером для пересчета media выражения
 
 ---
 
@@ -64,8 +64,8 @@ and [here](https://github.com/AStaroverov/v-media-query/blob/master/index.html)
     * Стандартное значение = ``'width'`` <br/>
       example: ``$mq.above(600) == $mq.above('width', 600)``
   * ``value, valMin, valMax``
-    * Может принимать значени типа ``Number`` и ``String``
-    * Все значения типа ``Number`` будут переведенны в ``Number + 'px'`` <br/>
+    * Может принимать значения типа ``Number`` и ``String``
+    * Все значения типа ``Number`` будут переведены в ``Number + 'px'`` <br/>
       example: ``$mq.above(600) == $mq.above('600px')``
 
 ---
@@ -75,7 +75,7 @@ and [here](https://github.com/AStaroverov/v-media-query/blob/master/index.html)
     example: $mq.expr('screen and (max-device-width: 300px)')
 
 ## Свои методы
-К стандартным методам можно добавить свои методы
+К стандартным методам можно добавить свои
 
 ### Пример
 ```javascript
@@ -96,7 +96,7 @@ Vue.use(vMediaQuery.default, {
 ```
 
 ## Переменные
-Плагин позволяет добавить в область видемости vue так же переменные <br/>
+Плагин позволяет добавить во vue переменные. <br/>
 Все переменные доступны в объекте ``$mv`` (media variables)
 
 ### Пример
@@ -112,8 +112,8 @@ Vue.use(vMediaQuery.default, {
 <some-component v-show="$mq.resize && $mq.between([$mv.sm, $mv.hd])"></some-component>
 ```
 
-## Наименование $mq и $mv
-Если вам по каким-то причинам не нравятся обозначения ``$mq``, ``$mv``, вы можете задать их самостаятельно
+## Наименования $mq и $mv
+Если вам по каким-то причинам не нравятся обозначения ``$mq``, ``$mv``, вы можете задать их самостоятельно
 <br/> (Исполльзуйте в начале имени $ || $$ || _ || __ так вы сможете избежать неожиданных конфликтов)
 
 ### Пример
