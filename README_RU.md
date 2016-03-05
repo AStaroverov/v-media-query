@@ -43,8 +43,8 @@ new Vue({
   }
 })
 ```
+and [here](https://github.com/AStaroverov/v-media-query/blob/master/index.html)
 
----
 
 ## Стандартные методы
 Все методы доступны в объекте ``$mq`` (media query)
