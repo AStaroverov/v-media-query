@@ -1,5 +1,5 @@
 # vue media query methods ([ru](https://github.com/AStaroverov/v-media-query/blob/master/README_RU.md))
-Plugin for vue, adds methods for work with media query
+Plugin adds methods for work with media query in vue
 
 ## General example:
 ```javascript
@@ -11,7 +11,7 @@ Vue.use(vMediaQuery.default)
 ```html
 <some-component v-if="$mq.resize && $mq.above('600px')"></some-component>
 ```
-v-if get ``true`` for all screen with ``width > 600px`` and will update after resize
+v-if gets ``true`` for screen with ``width > 600px`` and updates after resizing
 
 ```javascript
 new Vue({
@@ -46,10 +46,10 @@ new Vue({
 and [here](https://github.com/AStaroverov/v-media-query/blob/master/index.html)
 
 ## Defaults methods
-All methods allow in ``$mq`` (mq = media query)
+All methods are allowed in ``$mq`` (mq = media query)
 
 ``$mq.resize``
-  * variable for trigger update methods
+  * variable is trigger that update methods
 
 ---
 
@@ -64,7 +64,7 @@ All methods allow in ``$mq`` (mq = media query)
       example: ``$mq.above(600) == $mq.above('width', 600)``
   * ``value, valMin, valMax``
     * Can take type ``Number`` and ``String``
-    * All value type of ``Number`` will be rewrite to ``Number + 'px'`` <br/>
+    * All values type of ``Number`` will be rewrited to ``Number + 'px'`` <br/>
       example: ``$mq.above(600) == $mq.above('600px')``
 
 ---
@@ -74,7 +74,7 @@ All methods allow in ``$mq`` (mq = media query)
     example: $mq.expr('screen and (max-device-width: 300px)')
 
 ## Custom methods
-Your can add custom methods for default methods
+Your can add custom methods to default methods
 
 ### Example
 ```javascript
@@ -95,8 +95,8 @@ Vue.use(vMediaQuery.default, {
 ```
 
 ## Variables
-The plugin allows you to add in the vue scope custom variables <br/>
-All variables available in the ``$mv`` (mv = media variables)
+The plugin allows you to add custom variables in the vue  <br/>
+All variables are available in the ``$mv`` (mv = media variables)
 
 ### Example
 ```javascript
@@ -111,8 +111,8 @@ Vue.use(vMediaQuery.default, {
 <some-component v-show="$mq.resize && $mq.between([$mv.sm, $mv.hd])"></some-component>
 ```
 
-## Namespace $mq and $mv
-If u don`t like $mq and $mv namespaces u can change this
+## Names $mq and $mv
+If u don't like names ``$mq`` and ``$mv`` u can change them
 
 ### Example
 ```javascript
