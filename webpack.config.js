@@ -24,11 +24,17 @@ module.exports = {
 }
 
 if (process.env.NODE_ENV === 'production') {
-  module.exports.output.filename = "vue-toast.min.js",
+  module.exports.output.filename = "v-media-query.min.js",
   module.exports.plugins = [
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: '"production"'
+      }
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      sourceMap: false,
+      compress: {
+        warnings: false
       }
     }),
   ];
