@@ -52,7 +52,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -61,6 +61,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	
 	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+	
+	var _objectAssign = __webpack_require__(1);
+	
+	var _objectAssign2 = _interopRequireDefault(_objectAssign);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var vue = undefined;
 	var _vms = {};
@@ -95,10 +101,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var nameSpace = _ref$nameSpace === undefined ? {} : _ref$nameSpace;
 	
 	    vue = Vue;
-	    Object.assign(_nameSpace, nameSpace);
+	    (0, _objectAssign2.default)(_nameSpace, nameSpace);
 	
 	    Vue.options = Vue.util.mergeOptions(Vue.options, _mqData);
-	    Vue.prototype[_nameSpace.methods] = Object.assign({}, _methods, methods);
+	    Vue.prototype[_nameSpace.methods] = (0, _objectAssign2.default)({}, _methods, methods);
 	    Vue.prototype[_nameSpace.variables] = variables;
 	    initResize();
 	  }
@@ -202,6 +208,51 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  return matchMedia('\n    (min-' + measurement + ': ' + prepare(maxVal) + '),\n    (max-' + measurement + ': ' + prepare(minVal) + ')\n  ').matches;
 	}
+
+/***/ },
+/* 1 */
+/***/ function(module, exports) {
+
+	/* eslint-disable no-unused-vars */
+	'use strict';
+	var hasOwnProperty = Object.prototype.hasOwnProperty;
+	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+	
+	function toObject(val) {
+		if (val === null || val === undefined) {
+			throw new TypeError('Object.assign cannot be called with null or undefined');
+		}
+	
+		return Object(val);
+	}
+	
+	module.exports = Object.assign || function (target, source) {
+		var from;
+		var to = toObject(target);
+		var symbols;
+	
+		for (var s = 1; s < arguments.length; s++) {
+			from = Object(arguments[s]);
+	
+			for (var key in from) {
+				if (hasOwnProperty.call(from, key)) {
+					to[key] = from[key];
+				}
+			}
+	
+			if (Object.getOwnPropertySymbols) {
+				symbols = Object.getOwnPropertySymbols(from);
+				for (var i = 0; i < symbols.length; i++) {
+					if (propIsEnumerable.call(from, symbols[i])) {
+						to[symbols[i]] = from[symbols[i]];
+					}
+				}
+			}
+		}
+	
+		return to;
+	};
+
 
 /***/ }
 /******/ ])

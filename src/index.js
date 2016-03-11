@@ -1,3 +1,5 @@
+import objectAssign from 'object-assign'
+
 let vue
 let _vms = {}
 let _nameSpace = {
@@ -26,10 +28,10 @@ export default {
     nameSpace = {},
   } = {}) {
     vue = Vue
-    Object.assign(_nameSpace, nameSpace)
+    objectAssign(_nameSpace, nameSpace)
 
     Vue.options = Vue.util.mergeOptions(Vue.options, _mqData)
-    Vue.prototype[_nameSpace.methods] = Object.assign({}, _methods, methods)
+    Vue.prototype[_nameSpace.methods] = objectAssign({}, _methods, methods)
     Vue.prototype[_nameSpace.variables] = variables
     initResize();
   }

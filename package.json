@@ -2,7 +2,7 @@
   "name": "v-media-query",
   "version": "1.0.1",
   "description": "media query methods for vuejs",
-  "main": "/dist/v-media-query.min.js",
+  "main": "./dist/v-media-query.min.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "build_min": "NODE_ENV=production webpack --config webpack.config.js",
