@@ -1,6 +1,6 @@
 import throttle from 'lodash.throttle'
 
-// lazy methodsger
+// lazy methods
 let extend
 let defineReactive
 
