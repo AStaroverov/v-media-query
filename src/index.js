@@ -1,6 +1,9 @@
-import objectAssign from 'object-assign'
+import throttle from 'lodash.throttle'
 
-let vue
+// lazy methodsger
+let extend
+let defineReactive
+
 let _vms = {}
 let _nameSpace = {
   methods: '$mq',
@@ -12,10 +15,10 @@ let _mqData = {
     let root = this.$parent
 
     if (root) {
-      this.$set('$mq.resize', root[_nameSpace.methods].resize)
+      defineReactive(this[_nameSpace.methods], 'resize', root[_nameSpace.methods].resize)
     } else {
       _vms[this._uid] = this
-      vue.util.defineReactive(this[_nameSpace.methods], 'resize', 1)
+      defineReactive(this[_nameSpace.methods], 'resize', 1)
     }
   },
 }
@@ -27,22 +30,28 @@ export default {
     variables = {},
     nameSpace = {},
   } = {}) {
-    vue = Vue
-    objectAssign(_nameSpace, nameSpace)
+    lazyInitMethods(Vue)
+    extend(_nameSpace, nameSpace)
 
-    Vue.options = Vue.util.mergeOptions(Vue.options, _mqData)
-    Vue.prototype[_nameSpace.methods] = objectAssign({}, _methods, methods)
+    Vue.mixin(_mqData)
+    Vue.prototype[_nameSpace.methods] = extend(extend({}, _methods), methods)
     Vue.prototype[_nameSpace.variables] = variables
-    initResize();
+
+    initResize()
   }
 }
 
+function lazyInitMethods(Vue) {
+  extend = Vue.util.extend
+  defineReactive = Vue.util.defineReactive
+}
+
 function initResize() {
-  let debounseResize = vue.util.debounce(() => {
+  let throttleResize = throttle(() => {
     Object.keys(_vms).forEach(key => ++_vms[key][_nameSpace.methods].resize)
   } , 150)
 
-  window.addEventListener('resize', debounseResize)
+  window.addEventListener('resize', throttleResize)
 }
 
 function getArgs(args) {
