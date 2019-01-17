@@ -52,7 +52,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -68,11 +68,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	// lazy methodsger
-	var extend = undefined;
-	var defineReactive = undefined;
+	// lazy methods
+	var extend = void 0;
+	var defineReactive = void 0;
 	
-	var _vms = {};
+	var mapVmIdToVm = new Map();
+	
 	var _nameSpace = {
 	  methods: '$mq',
 	  variables: '$mv'
@@ -85,23 +86,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (root) {
 	      defineReactive(this[_nameSpace.methods], 'resize', root[_nameSpace.methods].resize);
 	    } else {
-	      _vms[this._uid] = this;
+	      mapVmIdToVm.set(this._uid, this);
 	      defineReactive(this[_nameSpace.methods], 'resize', 1);
 	    }
+	  },
+	  beforeDestroy: function beforeDestroy() {
+	    mapVmIdToVm.delete(this._uid);
 	  }
 	};
 	
 	exports.default = {
 	  methods: _methods,
 	  install: function install(Vue) {
-	    var _ref = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-	
-	    var _ref$methods = _ref.methods;
-	    var methods = _ref$methods === undefined ? {} : _ref$methods;
-	    var _ref$variables = _ref.variables;
-	    var variables = _ref$variables === undefined ? {} : _ref$variables;
-	    var _ref$nameSpace = _ref.nameSpace;
-	    var nameSpace = _ref$nameSpace === undefined ? {} : _ref$nameSpace;
+	    var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+	        _ref$methods = _ref.methods,
+	        methods = _ref$methods === undefined ? {} : _ref$methods,
+	        _ref$variables = _ref.variables,
+	        variables = _ref$variables === undefined ? {} : _ref$variables,
+	        _ref$nameSpace = _ref.nameSpace,
+	        nameSpace = _ref$nameSpace === undefined ? {} : _ref$nameSpace;
 	
 	    lazyInitMethods(Vue);
 	    extend(_nameSpace, nameSpace);
@@ -122,8 +125,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function initResize() {
 	  var throttleResize = (0, _lodash2.default)(function () {
-	    Object.keys(_vms).forEach(function (key) {
-	      return ++_vms[key][_nameSpace.methods].resize;
+	    mapVmIdToVm.forEach(function (vm) {
+	      return ++vm[_nameSpace.methods].resize;
 	    });
 	  }, 150);
 	
@@ -147,13 +150,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    args[_key] = arguments[_key];
 	  }
 	
-	  var _getArgs = getArgs(args);
-	
-	  var _getArgs2 = _slicedToArray(_getArgs, 2);
-	
-	  var value = _getArgs2[0];
-	  var _getArgs2$ = _getArgs2[1];
-	  var measurement = _getArgs2$ === undefined ? 'width' : _getArgs2$;
+	  var _getArgs = getArgs(args),
+	      _getArgs2 = _slicedToArray(_getArgs, 2),
+	      value = _getArgs2[0],
+	      _getArgs2$ = _getArgs2[1],
+	      measurement = _getArgs2$ === undefined ? 'width' : _getArgs2$;
 	
 	  return matchMedia('(max-' + measurement + ': ' + prepare(value) + ')').matches;
 	}
@@ -163,13 +164,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    args[_key2] = arguments[_key2];
 	  }
 	
-	  var _getArgs3 = getArgs(args);
-	
-	  var _getArgs4 = _slicedToArray(_getArgs3, 2);
-	
-	  var value = _getArgs4[0];
-	  var _getArgs4$ = _getArgs4[1];
-	  var measurement = _getArgs4$ === undefined ? 'width' : _getArgs4$;
+	  var _getArgs3 = getArgs(args),
+	      _getArgs4 = _slicedToArray(_getArgs3, 2),
+	      value = _getArgs4[0],
+	      _getArgs4$ = _getArgs4[1],
+	      measurement = _getArgs4$ === undefined ? 'width' : _getArgs4$;
 	
 	  return matchMedia('(min-' + measurement + ': ' + prepare(value) + ')').matches;
 	}
@@ -179,19 +178,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    args[_key3] = arguments[_key3];
 	  }
 	
-	  var _getArgs5 = getArgs(args);
+	  var _getArgs5 = getArgs(args),
+	      _getArgs6 = _slicedToArray(_getArgs5, 2),
+	      value = _getArgs6[0],
+	      _getArgs6$ = _getArgs6[1],
+	      measurement = _getArgs6$ === undefined ? 'width' : _getArgs6$;
 	
-	  var _getArgs6 = _slicedToArray(_getArgs5, 2);
-	
-	  var value = _getArgs6[0];
-	  var _getArgs6$ = _getArgs6[1];
-	  var measurement = _getArgs6$ === undefined ? 'width' : _getArgs6$;
-	
-	  var _value = _slicedToArray(value, 2);
-	
-	  var minVal = _value[0];
-	  var maxVal = _value[1];
-	
+	  var _value = _slicedToArray(value, 2),
+	      minVal = _value[0],
+	      maxVal = _value[1];
 	
 	  return matchMedia('\n    (min-' + measurement + ': ' + prepare(minVal) + ') and\n    (max-' + measurement + ': ' + prepare(maxVal) + ')\n  ').matches;
 	}
@@ -201,26 +196,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	    args[_key4] = arguments[_key4];
 	  }
 	
-	  var _getArgs7 = getArgs(args);
+	  var _getArgs7 = getArgs(args),
+	      _getArgs8 = _slicedToArray(_getArgs7, 2),
+	      value = _getArgs8[0],
+	      _getArgs8$ = _getArgs8[1],
+	      measurement = _getArgs8$ === undefined ? 'width' : _getArgs8$;
 	
-	  var _getArgs8 = _slicedToArray(_getArgs7, 2);
-	
-	  var value = _getArgs8[0];
-	  var _getArgs8$ = _getArgs8[1];
-	  var measurement = _getArgs8$ === undefined ? 'width' : _getArgs8$;
-	
-	  var _value2 = _slicedToArray(value, 2);
-	
-	  var minVal = _value2[0];
-	  var maxVal = _value2[1];
-	
+	  var _value2 = _slicedToArray(value, 2),
+	      minVal = _value2[0],
+	      maxVal = _value2[1];
 	
 	  return matchMedia('\n    (min-' + measurement + ': ' + prepare(maxVal) + '),\n    (max-' + measurement + ': ' + prepare(minVal) + ')\n  ').matches;
 	}
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * lodash (Custom Build) <https://lodash.com/>
@@ -664,7 +655,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
-/***/ }
+/***/ })
 /******/ ])
 });
 ;
