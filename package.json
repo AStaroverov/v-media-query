@@ -1,6 +1,6 @@
 {
   "name": "v-media-query",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "media query methods for vuejs",
   "main": "./dist/v-media-query.min.js",
   "scripts": {

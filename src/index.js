@@ -4,23 +4,27 @@ import throttle from 'lodash.throttle'
 let extend
 let defineReactive
 
-let _vms = {}
-let _nameSpace = {
+const mapVmIdToVm = new Map();
+
+const _nameSpace = {
   methods: '$mq',
   variables: '$mv'
 }
-let _methods = {expr, below, above, beyond, between}
-let _mqData = {
+const _methods = {expr, below, above, beyond, between}
+const _mqData = {
   created() {
-    let root = this.$parent
+    const root = this.$parent
 
     if (root) {
       defineReactive(this[_nameSpace.methods], 'resize', root[_nameSpace.methods].resize)
     } else {
-      _vms[this._uid] = this
+      mapVmIdToVm.set(this._uid, this)
       defineReactive(this[_nameSpace.methods], 'resize', 1)
     }
   },
+  beforeDestroy() {
+    mapVmIdToVm.delete(this._uid)
+  }
 }
 
 export default {
@@ -48,7 +52,7 @@ function lazyInitMethods(Vue) {
 
 function initResize() {
   let throttleResize = throttle(() => {
-    Object.keys(_vms).forEach(key => ++_vms[key][_nameSpace.methods].resize)
+    mapVmIdToVm.forEach((vm) => ++vm[_nameSpace.methods].resize)
   } , 150)
 
   window.addEventListener('resize', throttleResize)
@@ -69,18 +73,18 @@ function expr(expressionString) {
 }
 
 function below(...args) {
-  let [value, measurement = 'width'] = getArgs(args)
+  const [value, measurement = 'width'] = getArgs(args)
   return matchMedia(`(max-${measurement}: ${prepare(value)})`).matches
 }
 
 function above(...args) {
-  let [value, measurement = 'width'] = getArgs(args)
+  const [value, measurement = 'width'] = getArgs(args)
   return matchMedia(`(min-${measurement}: ${prepare(value)})`).matches
 }
 
 function between(...args) {
-  let [value, measurement = 'width'] = getArgs(args)
-  let [minVal, maxVal] = value
+  const [value, measurement = 'width'] = getArgs(args)
+  const [minVal, maxVal] = value
 
   return matchMedia(`
     (min-${measurement}: ${prepare(minVal)}) and
@@ -89,8 +93,8 @@ function between(...args) {
 }
 
 function beyond(...args) {
-  let [value, measurement = 'width'] = getArgs(args)
-  let [minVal, maxVal] = value
+  const [value, measurement = 'width'] = getArgs(args)
+  const [minVal, maxVal] = value
 
   return matchMedia(`
     (min-${measurement}: ${prepare(maxVal)}),
