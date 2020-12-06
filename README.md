@@ -43,7 +43,7 @@ new Vue({
   }
 })
 ```
-and [here](https://github.com/AStaroverov/v-media-query/blob/master/index.html)
+and [here](http://rawcdn.githack.com/AStaroverov/v-media-query/f35354a69a6e9dc05a1dd37237c597505b790f32/index.html)
 
 ## Defaults methods
 All methods are allowed in ``$mq`` (mq = media query)
